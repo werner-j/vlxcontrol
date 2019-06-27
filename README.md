@@ -14,7 +14,7 @@ Configuration
 -------------
 Please enter your KLF 200 connection information into the ./pyvlx.yaml configuration file.
 
-Help
+Usage
 ----
 ```bash
 usage: vlxcontrol.py [-h] [-c CONFIG] host port
@@ -29,8 +29,6 @@ optional arguments:
                         specify the path to a pyvlx.yaml configuration file
 ```
 
-Operation
----------
 Start the service running
 ```bash
 ./vlxcontrol.py <listen_address> <port>
