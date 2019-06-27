@@ -1,3 +1,2 @@
 bottle==0.12.15
 pyvlx==0.2.11
-PyYAML==3.13
