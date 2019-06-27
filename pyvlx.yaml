@@ -1,0 +1,3 @@
+config:
+   host: "VELUX_KLF_ip_or_hostname"
+   password: "wifiPasswordForKlf200"
