@@ -1,3 +1,5 @@
+#! /usr/bin/env python3
+
 import subprocess,asyncio,json,time,argparse
 from bottle import run, post, request, response, get, route
 from pyvlx import Position, PyVLX
