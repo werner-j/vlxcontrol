@@ -41,7 +41,7 @@ def process():
 
     try:
         NODE = message['node']
-        POS = message['position']
+        POS = int(message['position'])
     except:
         return('{ "result" : "fail", "reason" : "node or position not provided" }')
 
