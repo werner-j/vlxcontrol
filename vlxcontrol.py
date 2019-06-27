@@ -5,6 +5,7 @@ from pyvlx import Position, PyVLX
 parser = argparse.ArgumentParser()
 parser.add_argument("host")
 parser.add_argument("port")
+parser.add_argument("-c", "--config", help="specify the path to a pyvlx.yaml configuration file")
 args = parser.parse_args()
 
 host = args.host
@@ -13,7 +14,11 @@ port = int(args.port)
 async def main(loop):
     print('Starting Control Server for KLF200...')
     global pyvlx
-    pyvlx = PyVLX('pyvlx.yaml', loop=loop)
+    klf_host = args.config
+    if (klf_host == None):
+        klf_host = "./pyvlx.yaml"
+    
+    pyvlx = PyVLX(klf_host, loop=loop)
     await pyvlx.load_nodes()
 
 if __name__ == '__main__':
