@@ -13,7 +13,7 @@ port = int(args.port)
 async def main(loop):
     print('Starting Control Server for KLF200...')
     global pyvlx
-    pyvlx = PyVLX('/home/velux/klf200control/pyvlx.yaml', loop=loop)
+    pyvlx = PyVLX('pyvlx.yaml', loop=loop)
     await pyvlx.load_nodes()
 
 if __name__ == '__main__':
