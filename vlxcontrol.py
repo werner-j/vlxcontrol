@@ -46,7 +46,19 @@ def process():
         return('{ "result" : "fail", "reason" : "node or position not provided" }')
 
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(set(NODE,POS))
+    executed = False
+
+    while (executed != True):
+        try:
+            loop.run_until_complete(set(NODE,POS))
+            executed = True
+        except:
+            print('Reconnect PyVLX')
+            pyvlx.disconnect()
+            main(loop)
+            print('Reissue command')
+            loop.run_until_complete(set(NODE,POS))
+            executed = True
 
     return('{ "result" : "ok", "node" : "',NODE,'", "position" : "',str(POS),'" }')
 
