@@ -1,5 +1,5 @@
 # VlxControl
-VlxControl is a lightweight service that uses [PyVLX](https://github.com/Julius2342/pyvlx) to control io-Homecontrol devices with a Velux KLF 200. Once started, it can be used to control windows, rollershutters, ... from any arbitrary home control software that can execute the curl command.
+VlxControl is a lightweight service that uses [PyVLX](https://github.com/Julius2342/pyvlx) to control io-Homecontrol devices with a Velux KLF 200. It therefore utilizes JSON command/response with AIOHTTP server. Once started, it can be used to control windows, rollershutters, ... from any arbitrary home control software that can execute the curl command.
 
 Installation
 ------------
