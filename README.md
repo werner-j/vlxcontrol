@@ -47,3 +47,9 @@ curl -s http://<host>:<port>/position/windowNameInKlf
 ```
 
 to get a device's current positon.
+
+To get a list of all registered devices just issue
+
+```bash
+curl -s http://<host>:<port>/devices
+```
