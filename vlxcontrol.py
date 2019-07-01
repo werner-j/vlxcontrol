@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import subprocess,asyncio,json,time,argparse
+import subprocess,asyncio,json,time,argparse,re
 from aiohttp import web
 from bottle import run, post, request, response, get, route
 from pyvlx import Position, PyVLX
@@ -60,7 +60,7 @@ async def get_position(request):
         device_name = request.match_info.get('device', None)
         device = pyvlx.nodes[device_name]
         await device.stop()
-        pos = device.position
+        pos = int(re.sub("\D", "", str(device.position)))
     except KeyError:
         response = { 'result':'fail', 'reason':'device unknown' }
         return web.json_response(response)
@@ -68,7 +68,7 @@ async def get_position(request):
         response = { 'result':'fail', 'reason':'exception during execution', 'message':str(e) }
         return web.json_response(response)
 
-    data = { 'result' : 'ok', 'device' : device_name, 'position' : str(pos) }
+    data = { 'result' : 'ok', 'device' : device_name, 'position' : pos }
     return web.json_response(data)
 
 @routes.get('/devices')
