@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 
 import subprocess,asyncio,json,time,argparse
+from aiohttp import web
 from bottle import run, post, request, response, get, route
 from pyvlx import Position, PyVLX
 
@@ -13,54 +14,72 @@ args = parser.parse_args()
 host = args.host
 port = int(args.port)
 
-async def main(loop):
+routes = web.RouteTableDef()
+
+async def init_pyvlx_connection(loop):
     print('Starting Control Server for KLF200...')
     global pyvlx
     klf_host = args.config
     if (klf_host == None):
         klf_host = "./pyvlx.yaml"
-    
+
     pyvlx = PyVLX(klf_host, loop=loop)
     await pyvlx.load_nodes()
 
-if __name__ == '__main__':
-    LOOP = asyncio.get_event_loop()
-    LOOP.run_until_complete(main(LOOP))
+async def reconnect(loop):
+    await pyvlx.disconnect()
+    loop.run_until_complete(main(loop))
 
-async def set(node,pos):
-    await pyvlx.nodes[node].set_position(Position(position_percent=pos),wait_for_completion=False)
-
-@route('/set',method = 'POST')
-def process():
+@routes.post('/set')
+async def handle(request):
     reqType = request.content_type
     if (reqType != 'application/json'):
-        return('{ "result" : "fail", "reason" : "unsupported request type" }')
+        response = { 'result':'fail', 'reason':'unsupported request type' }
+        return web.json_response(response)
 
-    length = int(request.content_length)
-    message = json.load(request.body)
+    message = await request.json()
 
     try:
         NODE = message['node']
         POS = int(message['position'])
     except:
-        return('{ "result" : "fail", "reason" : "node or position not provided" }')
+        response = { 'result':'fail', 'reason':'node or position not provided' }
+        return web.json_response(response)
 
-    loop = asyncio.get_event_loop()
-    executed = False
+    try:
+        await pyvlx.nodes[NODE].set_position(Position(position_percent=POS),wait_for_completion=False)
+    except KeyError:
+        response = { 'result':'fail', 'reason':'device unknown' }
+        return web.json_response(response)
+    except Exception as e:
+        response = { 'result':'fail', 'reason':'exception during execution', 'message':str(e) }
+        return web.json_response(response)
 
-    while (executed != True):
-        try:
-            loop.run_until_complete(set(NODE,POS))
-            executed = True
-        except:
-            print('Reconnect PyVLX')
-            pyvlx.disconnect()
-            main(loop)
-            print('Reissue command')
-            loop.run_until_complete(set(NODE,POS))
-            executed = True
+    newPos = pyvlx.nodes[NODE].position
+    data = { 'result' : 'ok', 'device' : NODE, 'position' : str(newPos) }
+    return web.json_response(data)
 
-    return('{ "result" : "ok", "node" : "',NODE,'", "position" : "',str(POS),'" }')
+@routes.get('/position/{device}')
+async def get_position(request):
+    try:
+        device_name = request.match_info.get('device', None)
+        device = pyvlx.nodes[device_name]
+        await device.stop()
+        pos = device.position
+    except KeyError:
+        response = { 'result':'fail', 'reason':'device unknown' }
+        return web.json_response(response)
+    except Exception as e:
+        response = { 'result':'fail', 'reason':'exception during execution', 'message':str(e) }
+        return web.json_response(response)
 
-run(host=host, port=port, debug=True)
+    data = { 'result' : 'ok', 'device' : device_name, 'position' : str(pos) }
+    return web.json_response(data)
 
+if __name__ == '__main__':
+    LOOP = asyncio.get_event_loop()
+    LOOP.run_until_complete(init_pyvlx_connection(LOOP))
+
+    app = web.Application()
+    app.add_routes(routes)
+    web.run_app(app, host=host, port=port)
