@@ -6,8 +6,8 @@ from bottle import run, post, request, response, get, route
 from pyvlx import Position, PyVLX
 
 parser = argparse.ArgumentParser()
-parser.add_argument("host")
-parser.add_argument("port")
+parser.add_argument("host", help="listening address")
+parser.add_argument("port", help="listen on this port")
 parser.add_argument("-c", "--config", help="specify the path to a pyvlx.yaml configuration file")
 args = parser.parse_args()
 

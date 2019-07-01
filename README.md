@@ -20,8 +20,8 @@ Usage
 usage: vlxcontrol.py [-h] [-c CONFIG] host port
 
 positional arguments:
-  host
-  port
+  host                  listening address
+  port                  listen on this port
 
 optional arguments:
   -h, --help            show this help message and exit
