@@ -83,7 +83,6 @@ async def get_devices(request):
         for node in pyvlx.nodes:
             nodetype = str(type(node).__name__)
             data['devices'].append({'id':node.node_id,'name':node.name,'type':nodetype})
-            print(node)
         return web.json_response(data)
     except:
         response = { 'result':'fail' }
