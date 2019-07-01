@@ -37,5 +37,13 @@ Start the service running
 and make calls using cURL. To close a window, for example, run
 
 ```bash
-curl -X POST --data "{\"node\":\"windowNameInKlf\", \"position\":100}" --header "Content-Type: application/json" http://<your-server>:<port>/set
+curl -X POST --data "{\"node\":\"windowNameInKlf\", \"position\":100}" --header "Content-Type: application/json" http://<host>:<port>/set
 ```
+
+to set a device to a position and execute
+
+```bash
+curl -s http://<host>:<port>/position/windowNameInKlf
+```
+
+to get a device's current positon.
