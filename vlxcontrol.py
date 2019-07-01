@@ -78,12 +78,16 @@ async def get_position(request):
 
 @routes.get('/devices')
 async def get_devices(request):
-    data = { 'result':'ok', 'devices':[] }
-    for node in pyvlx.nodes:
-        nodetype = str(type(node).__name__)
-        data['devices'].append({'id':node.node_id,'name':node.name,'type':nodetype})
-        print(node)
-    return web.json_response(data)
+    try:
+        data = { 'result':'ok', 'devices':[] }
+        for node in pyvlx.nodes:
+            nodetype = str(type(node).__name__)
+            data['devices'].append({'id':node.node_id,'name':node.name,'type':nodetype})
+            print(node)
+        return web.json_response(data)
+    except:
+        response = { 'result':'fail' }
+        return web.json_response(response)
 
 if __name__ == '__main__':
     LOOP = asyncio.get_event_loop()
