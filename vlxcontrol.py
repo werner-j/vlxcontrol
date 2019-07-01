@@ -17,7 +17,6 @@ port = int(args.port)
 routes = web.RouteTableDef()
 
 async def init_pyvlx_connection(loop):
-    print('Starting Control Server for KLF200...')
     global pyvlx
     klf_host = args.config
     if (klf_host == None):
