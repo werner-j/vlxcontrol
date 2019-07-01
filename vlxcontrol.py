@@ -26,10 +26,6 @@ async def init_pyvlx_connection(loop):
     pyvlx = PyVLX(klf_host, loop=loop)
     await pyvlx.load_nodes()
 
-async def reconnect(loop):
-    await pyvlx.disconnect()
-    loop.run_until_complete(main(loop))
-
 @routes.post('/set')
 async def handle(request):
     reqType = request.content_type
