@@ -57,7 +57,6 @@ curl -s http://<host>:<port>/devices
 ```
 
 # Setup with OpenHAB
-
 You can use vlxcontrol to control your io-homecontrol devices (like Somfy Dexxo garage door opener or Somfy Oximo rollershutter motor) from OpenHAB. Therefore, you should install the http binding and set up an item similar to this:
 
 ```
