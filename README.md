@@ -63,6 +63,14 @@ You can use vlxcontrol to control your io-homecontrol devices (like Somfy Dexxo 
 Rollershutter   MY_ROLLER { http=">[*:POST:http://<host>:<port>/set/<devicename>/%2$s] <[http://<host>:<port>/position/<devicename>:60000:JSONPATH($.position)]" }
 ```
 
+or more enhanced to support UP, DOWN and STOP if you use it as a switch in your sitemap you may add
+
+```
+>[STOP:POST:http://<host>:<port>/stop/<devicename>] >[DOWN:POST:http://<host>:<port>/set/<devicename>/100] >[UP:POST:http://<host>:<port>/set/<devicename>/0] 
+```
+
+to the http binding definition.
+
 This will issue commands to the device and update the device position every 60 seconds (for cases where, e.g., a rollershutter controller like Somfy smoove 1 io is being used).
 
 Then in your sitemap you can define a Slider which can be used to control the device.
