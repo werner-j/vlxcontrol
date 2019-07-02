@@ -25,6 +25,28 @@ async def init_pyvlx_connection(loop):
     pyvlx = PyVLX(klf_host, loop=loop)
     await pyvlx.load_nodes()
 
+@routes.post('/set/{device}/{position}')
+async def handle(request):
+    try:
+        NODE = request.match_info.get('device')
+        POS = int(request.match_info.get('position'))
+    except:
+        response = { 'result':'fail', 'reason':'node or position not provided' }
+        return web.json_response(response)
+
+    try:
+        await pyvlx.nodes[NODE].set_position(Position(position_percent=POS),wait_for_completion=False)
+    except KeyError:
+        response = { 'result':'fail', 'reason':'device unknown' }
+        return web.json_response(response)
+    except Exception as e:
+        response = { 'result':'fail', 'reason':'exception during execution', 'message':str(e) }
+        return web.json_response(response)
+
+    newPos = pyvlx.nodes[NODE].position
+    data = { 'result' : 'ok', 'device' : NODE, 'position' : str(newPos) }
+    return web.json_response(data)
+
 @routes.post('/set')
 async def handle(request):
     reqType = request.content_type
@@ -59,7 +81,6 @@ async def get_position(request):
     try:
         device_name = request.match_info.get('device', None)
         device = pyvlx.nodes[device_name]
-        await device.stop()
         pos = int(re.sub("\D", "", str(device.position)))
     except KeyError:
         response = { 'result':'fail', 'reason':'device unknown' }
