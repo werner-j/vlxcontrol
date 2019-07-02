@@ -10,6 +10,8 @@ pip3 install -r requirements.txt
 chmod +x vlxcontrol.py
 ```
 
+and either run it within a screen session or as a service.
+
 Configuration
 -------------
 Please enter your KLF 200 connection information into the ./pyvlx.yaml configuration file.
