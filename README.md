@@ -73,4 +73,9 @@ to the http binding definition.
 
 This will issue commands to the device and update the device position every 60 seconds (for cases where, e.g., a rollershutter controller like Somfy smoove 1 io is being used).
 
-Then in your sitemap you can define a Slider which can be used to control the device.
+Your sitemap might have entries like
+
+```
+Switch		item=MY_ROLLER
+Slider		item=MY_ROLLER
+```
