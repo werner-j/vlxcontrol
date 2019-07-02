@@ -53,3 +53,14 @@ To get a list of all registered devices just issue
 ```bash
 curl -s http://<host>:<port>/devices
 ```
+
+Setup with OpenHAB
+==================
+
+You can use vlxcontrol to control your io-homecontrol devices (like Somfy Dexxo garage door opener or Somfy Oximo rollershutter motor) from OpenHAB. Therefore, you should install the http binding and set up an item similar to this:
+
+```
+Rollershutter   MY_ROLLER { http=">[*:POST:http://<host>:<port>/set/<devicename>/%2$s] <[http://<host>:<port>/position/<devicename>:60000:JSONPATH($.position)]" }
+```
+
+Then in your sitemap you can define a Slider which can be used to control the device.
