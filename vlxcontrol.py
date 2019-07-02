@@ -94,7 +94,7 @@ async def get_position(request):
     try:
         device_name = request.match_info.get('device', None)
         device = pyvlx.nodes[device_name]
-        pos = int(re.sub("\D", "", str(device.position)))
+        pos = int(get_position(device))
     except KeyError:
         response = { 'result':'fail', 'reason':'device unknown' }
         return web.json_response(response)
@@ -111,11 +111,18 @@ async def get_devices(request):
         data = { 'result':'ok', 'devices':[] }
         for node in pyvlx.nodes:
             nodetype = str(type(node).__name__)
-            data['devices'].append({'id':node.node_id,'name':node.name,'type':nodetype})
+            if (str(node.position) == 'UNKNOWN'):
+                data['devices'].append({'id':node.node_id,'name':node.name,'type':nodetype})
+            else:
+                pos = int(get_position(node))
+                data['devices'].append({'id':node.node_id,'name':node.name,'type':nodetype,'position':pos})
         return web.json_response(data)
-    except:
+    except Exception as e:
         response = { 'result':'fail' }
         return web.json_response(response)
+
+def get_position(device):
+    return re.sub("\D", "", str(device.position))
 
 if __name__ == '__main__':
     LOOP = asyncio.get_event_loop()
