@@ -26,7 +26,7 @@ async def init_pyvlx_connection(loop):
     await pyvlx.load_nodes()
 
 @routes.post('/set/{device}/{position}')
-async def handle(request):
+async def url_set(request):
     try:
         NODE = request.match_info.get('device')
         POS = int(request.match_info.get('position'))
@@ -41,6 +41,19 @@ async def handle(request):
         return web.json_response(response)
     except Exception as e:
         response = { 'result':'fail', 'reason':'exception during execution', 'message':str(e) }
+        return web.json_response(response)
+
+    newPos = pyvlx.nodes[NODE].position
+    data = { 'result' : 'ok', 'device' : NODE, 'position' : str(newPos) }
+    return web.json_response(data)
+
+@routes.post('/stop/{device}')
+async def url_stop(request):
+    try:
+        NODE = request.match_info.get('device')
+        await pyvlx.nodes[NODE].stop()
+    except:
+        response = { 'result':'fail', 'reason':'node or position not provided' }
         return web.json_response(response)
 
     newPos = pyvlx.nodes[NODE].position
