@@ -10,6 +10,8 @@ pip3 install -r requirements.txt
 chmod +x vlxcontrol.py
 ```
 
+and either run it within a screen session or as a service.
+
 Configuration
 -------------
 Please enter your KLF 200 connection information into the ./pyvlx.yaml configuration file.
@@ -54,9 +56,7 @@ To get a list of all registered devices just issue
 curl -s http://<host>:<port>/devices
 ```
 
-[Setup with OpenHAB](#openhab)
-==================
-
+# Setup with OpenHAB
 You can use vlxcontrol to control your io-homecontrol devices (like Somfy Dexxo garage door opener or Somfy Oximo rollershutter motor) from OpenHAB. Therefore, you should install the http binding and set up an item similar to this:
 
 ```
